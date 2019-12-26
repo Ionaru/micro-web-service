@@ -9,6 +9,13 @@
             true,
             140
         ],
+        "no-implicit-dependencies": [
+            true,
+            "dev",
+            [
+                "express-serve-static-core"
+            ]
+        ],
         "no-null-keyword": true,
         "no-unused-expression": [
             true,
