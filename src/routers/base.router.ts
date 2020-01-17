@@ -85,9 +85,9 @@ export abstract class BaseRouter {
         BaseRouter.debug(`New express router: ${this.constructor.name}`);
     }
 
-    public createRoute(method: Method, url: PathParams, routeFunction: RequestHandler | RequestHandlerParams): void {
+    public createRoute(method: Method, url: PathParams, ...handlers: Array<RequestHandler | RequestHandlerParams>): void {
         BaseRouter.debug(`New route: ${method.toUpperCase()} ${url}`);
-        this.router[method](url, this.asyncHandler(routeFunction));
+        this.router[method](url, ...handlers.map((handler) => this.asyncHandler(handler)));
     }
 
     private asyncHandler(routeFunction: any): any {
