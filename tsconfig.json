@@ -13,6 +13,9 @@
         "resolveJsonModule": true,
         "lib": [
             "esnext",
+            "es2020",
+            "es2019",
+            "es2018",
             "es2018",
             "es2017",
             "es2016",
