@@ -6,5 +6,6 @@ export { ServiceController, IOption, IRoute } from './controllers/service.contro
 export { BaseRouter } from './routers/base.router';
 export { RequestLogger } from './loggers/request.logger';
 export { NextFunction, Request, RequestHandler, Response, Router } from 'express';
+// eslint-disable-next-line import/no-unresolved
 export { PathParams, RequestHandlerParams } from 'express-serve-static-core';
 export { bodyParser, compression, express };

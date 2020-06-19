@@ -2,6 +2,7 @@ import { WebServer } from '@ionaru/web-server';
 import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
 import * as express from 'express';
+// eslint-disable-next-line import/no-unresolved
 import { ErrorRequestHandler, PathParams, RequestHandler } from 'express-serve-static-core';
 
 import { BaseRouter, RequestLogger } from '..';
@@ -31,7 +32,7 @@ export class ServiceController {
     public readonly webServer: WebServer;
     public readonly expressApplication: express.Application;
 
-    constructor(
+    public constructor(
         {
             errorRouter,
             middleware = [
@@ -74,11 +75,11 @@ export class ServiceController {
         this.webServer = new WebServer(this.expressApplication, port);
     }
 
-    public async listen() {
+    public async listen(): Promise<void> {
         return this.webServer.listen();
     }
 
-    public async close() {
+    public async close(): Promise<void> {
         return this.webServer.close();
     }
 }
