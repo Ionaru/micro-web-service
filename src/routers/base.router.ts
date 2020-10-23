@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response, Router } from 'express';
 import { PathParams, RequestHandlerParams } from 'express-serve-static-core';
-import * as httpStatus from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 
 import { debug } from '../debug';
 
@@ -36,18 +36,34 @@ export abstract class BaseRouter {
         return response.json(responseData);
     }
 
-    public static sendSuccessResponse(response: Response, data?: any): Response {
-        return BaseRouter.sendResponse(response, httpStatus.OK, 'OK', data);
+    public static sendSuccess(response: Response, data?: any): Response {
+        return BaseRouter.sendResponse(response, StatusCodes.OK, 'OK', data);
     }
 
-    public static send404(response: Response, message = 'Not Found'): Response {
-        return BaseRouter.sendResponse(response, httpStatus.NOT_FOUND, message);
+    public static sendBadRequest(response: Response, property: unknown, reason: string): Response {
+        return BaseRouter.sendResponse(response, StatusCodes.BAD_REQUEST, 'Not Found', {property, reason});
+    }
+
+    public static sendNotFound(response: Response, url: string): Response {
+        return BaseRouter.sendResponse(response, StatusCodes.NOT_FOUND, 'Not Found', {url});
+    }
+
+    public static sendMethodNotAllowed(response: Response, method: string, url: string): Response {
+        return BaseRouter.sendResponse(response, StatusCodes.METHOD_NOT_ALLOWED, 'Method not allowed', {method, url});
+    }
+
+    public static notFound(request: Request, response: Response): Response {
+        return BaseRouter.sendNotFound(response, request.originalUrl);
+    }
+
+    protected static methodNotAllowed(request: Request, response: Response): Response {
+        return BaseRouter.sendMethodNotAllowed(response, request.method, request.originalUrl);
     }
 
     public static checkBodyParameters(request: Request, response: Response, nextFunction: NextFunction, params: string[]) {
         const missingParameters = params.filter((param) => !Object.keys(request.body).includes(param));
         if (missingParameters.length) {
-            BaseRouter.sendResponse(response, httpStatus.BAD_REQUEST, 'MissingParameters', missingParameters);
+            BaseRouter.sendResponse(response, StatusCodes.BAD_REQUEST, 'MissingParameters', missingParameters);
             return;
         }
         return nextFunction;
@@ -56,7 +72,7 @@ export abstract class BaseRouter {
     public static checkQueryParameters(request: Request, response: Response, nextFunction: NextFunction, params: string[]) {
         const missingParameters = params.filter((param) => !Object.keys(request.query).includes(param));
         if (missingParameters.length) {
-            BaseRouter.sendResponse(response, httpStatus.BAD_REQUEST, 'MissingParameters', missingParameters);
+            BaseRouter.sendResponse(response, StatusCodes.BAD_REQUEST, 'MissingParameters', missingParameters);
             return;
         }
         return nextFunction;

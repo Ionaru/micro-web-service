@@ -4,6 +4,7 @@ import * as express from 'express';
 
 export { ServiceController, IOption, IRoute } from './controllers/service.controller';
 export { BaseRouter } from './routers/base.router';
+export { NotFoundRoute } from './routes/not-found.route';
 export { RequestLogger } from './loggers/request.logger';
 export { NextFunction, Request, RequestHandler, Response, Router } from 'express';
 export { PathParams, RequestHandlerParams } from 'express-serve-static-core';
