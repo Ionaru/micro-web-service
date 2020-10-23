@@ -6,10 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Support for Node.js 14.
 - Helper functions for sending 200, 400, 404 and 405 responses.
 
 ## [1.0.0]
 ### Added
-- Setup for this project
+- Initial code.
+- Setup for this project.
 
-[Unreleased]: https://github.com/Ionaru/micro-web-service/compare/3b5e936...HEAD
+[Unreleased]: https://github.com/Ionaru/micro-web-service/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/Ionaru/micro-web-service/compare/3b5e936...1.0.0
