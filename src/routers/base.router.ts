@@ -1,4 +1,5 @@
 import { NextFunction, Request, RequestHandler, Response, Router } from 'express';
+// eslint-disable-next-line import/no-unresolved
 import { PathParams, RequestHandlerParams } from 'express-serve-static-core';
 import { StatusCodes } from 'http-status-codes';
 
@@ -19,7 +20,15 @@ type Method = 'post' | 'put' | 'get' | 'delete' | 'all';
 
 export abstract class BaseRouter {
 
-    public static sendResponse(response: Response, statusCode: number, message: string, data?: any): Response {
+    protected static debug = debug.extend('router');
+
+    public router = Router();
+
+    protected constructor() {
+        BaseRouter.debug(`New express router: ${this.constructor.name}`);
+    }
+
+    public static sendResponse(response: Response, statusCode: number, message: string, data?: Record<any, any>): Response {
         const state = statusCode < 400 ? 'success' : 'error';
 
         const responseData: IServerResponse<any> = {
@@ -36,7 +45,7 @@ export abstract class BaseRouter {
         return response.json(responseData);
     }
 
-    public static sendSuccess(response: Response, data?: any): Response {
+    public static sendSuccess(response: Response, data?: Record<any, any>): Response {
         return BaseRouter.sendResponse(response, StatusCodes.OK, 'OK', data);
     }
 
@@ -56,11 +65,13 @@ export abstract class BaseRouter {
         return BaseRouter.sendNotFound(response, request.originalUrl);
     }
 
-    protected static methodNotAllowed(request: Request, response: Response): Response {
+    public static methodNotAllowed(request: Request, response: Response): Response {
         return BaseRouter.sendMethodNotAllowed(response, request.method, request.originalUrl);
     }
 
-    public static checkBodyParameters(request: Request, response: Response, nextFunction: NextFunction, params: string[]) {
+    public static checkBodyParameters(
+        request: Request, response: Response, nextFunction: NextFunction, params: string[]
+    ): NextFunction | undefined {
         const missingParameters = params.filter((param) => !Object.keys(request.body).includes(param));
         if (missingParameters.length) {
             BaseRouter.sendResponse(response, StatusCodes.BAD_REQUEST, 'MissingParameters', missingParameters);
@@ -69,7 +80,9 @@ export abstract class BaseRouter {
         return nextFunction;
     }
 
-    public static checkQueryParameters(request: Request, response: Response, nextFunction: NextFunction, params: string[]) {
+    public static checkQueryParameters(
+        request: Request, response: Response, nextFunction: NextFunction, params: string[]
+    ): NextFunction | undefined {
         const missingParameters = params.filter((param) => !Object.keys(request.query).includes(param));
         if (missingParameters.length) {
             BaseRouter.sendResponse(response, StatusCodes.BAD_REQUEST, 'MissingParameters', missingParameters);
@@ -79,6 +92,7 @@ export abstract class BaseRouter {
     }
 
     public static requestDecorator(func: (x: Request, y: Response, z: any, a?: any) => any, ...extraArgs: any[]) {
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         return (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) => {
             const originalFunction = descriptor.value;
 
@@ -91,14 +105,6 @@ export abstract class BaseRouter {
 
             return descriptor;
         };
-    }
-
-    protected static debug = debug.extend('router');
-
-    public router = Router();
-
-    protected constructor() {
-        BaseRouter.debug(`New express router: ${this.constructor.name}`);
     }
 
     public createRoute(method: Method, url: PathParams, routeFunction: RequestHandler | RequestHandlerParams): void {
