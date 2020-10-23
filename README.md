@@ -34,7 +34,7 @@ export class ExampleRouter extends BaseRouter {
         super();
 
         this.createRoute('get', '/bad', ExampleRouter.badHandler);
-        this.createRoute('get', '/ok', ExampleRouter.okHandler);
+        this.createRoute('get', '/ok', ExampleRouter.okHandler.bind(this)); // Bind class context.
         this.createRoute('get', '/data', ExampleRouter.dataHandler);
     }
 }
