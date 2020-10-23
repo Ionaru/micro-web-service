@@ -5,7 +5,8 @@ A package for an easy express setup.
 
 ## Usage
 ```
-npm install @ionaru/micro-web-service
+npm install @ionaru/micro-web-service chalk debug http-status-codes supports-color
+npm install -D @types/body-parser @types/compression @types/debug @types/express @types/express-serve-static-core
 ```
 
 ```js
