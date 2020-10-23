@@ -1,6 +1,6 @@
 {
     "name": "@ionaru/micro-web-service",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "My package micro-web-service",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

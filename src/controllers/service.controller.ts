@@ -3,7 +3,7 @@ import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
 import * as express from 'express';
 // eslint-disable-next-line import/no-unresolved
-import { PathParams } from 'express-serve-static-core';
+import { ErrorRequestHandler, PathParams, RequestHandler } from 'express-serve-static-core';
 
 import { BaseRouter, RequestLogger } from '..';
 import { debug } from '../debug';
@@ -19,7 +19,8 @@ export interface IOption {
 }
 
 interface IConstructorParams {
-    middleware?: express.RequestHandler[];
+    errorRouter?: ErrorRequestHandler;
+    middleware?: RequestHandler[];
     options?: IOption[];
     port: number;
     routes: IRoute[];
@@ -33,6 +34,7 @@ export class ServiceController {
 
     public constructor(
         {
+            errorRouter,
             middleware = [
                 RequestLogger.logRequest(),
                 bodyParser.json(),
@@ -61,6 +63,11 @@ export class ServiceController {
 
         debug('Adding routes');
         routes.forEach((route) => this.expressApplication.use(route[0], route[1].router));
+
+        if (errorRouter) {
+            debug('Error router added');
+            this.expressApplication.use(errorRouter);
+        }
 
         debug('Express configuration set');
         debug('App startup done');

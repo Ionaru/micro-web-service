@@ -28,10 +28,10 @@ export abstract class BaseRouter {
         BaseRouter.debug(`New express router: ${this.constructor.name}`);
     }
 
-    public static sendResponse(response: Response, statusCode: number, message: string, data?: Record<any, any>): Response {
+    public static sendResponse<T>(response: Response, statusCode: number, message: string, data?: T): Response {
         const state = statusCode < 400 ? 'success' : 'error';
 
-        const responseData: IServerResponse<any> = {
+        const responseData: IServerResponse<T> = {
             data,
             message,
             state,
@@ -45,7 +45,7 @@ export abstract class BaseRouter {
         return response.json(responseData);
     }
 
-    public static sendSuccess(response: Response, data?: Record<any, any>): Response {
+    public static sendSuccess<T>(response: Response, data?: T): Response {
         return BaseRouter.sendResponse(response, StatusCodes.OK, 'OK', data);
     }
 
@@ -92,8 +92,7 @@ export abstract class BaseRouter {
     }
 
     public static requestDecorator(func: (x: Request, y: Response, z: any, a?: any) => any, ...extraArgs: any[]) {
-        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-        return (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) => {
+        return (_target: unknown, _propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
             const originalFunction = descriptor.value;
 
             descriptor.value = async function descriptorValue(...args: any[]) {
@@ -107,9 +106,9 @@ export abstract class BaseRouter {
         };
     }
 
-    public createRoute(method: Method, url: PathParams, routeFunction: RequestHandler | RequestHandlerParams): void {
+    public createRoute(method: Method, url: PathParams, ...handlers: Array<RequestHandler | RequestHandlerParams>): void {
         BaseRouter.debug(`New route: ${method.toUpperCase()} ${url}`);
-        this.router[method](url, this.asyncHandler(routeFunction));
+        this.router[method](url, ...handlers.map((handler) => this.asyncHandler(handler)));
     }
 
     private asyncHandler(routeFunction: any): any {
