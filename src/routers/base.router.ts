@@ -50,7 +50,7 @@ export abstract class BaseRouter {
     }
 
     public static sendBadRequest(response: Response, property: unknown, reason: string): Response {
-        return BaseRouter.sendResponse(response, StatusCodes.BAD_REQUEST, 'Not Found', {property, reason});
+        return BaseRouter.sendResponse(response, StatusCodes.BAD_REQUEST, 'Bad Request', {property, reason});
     }
 
     public static sendNotFound(response: Response, url: string): Response {
