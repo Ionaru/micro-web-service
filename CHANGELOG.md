@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Support for Node.js 14.
 - Helper functions for sending 200, 400, 404 and 405 responses.
+- `IServerResponse` to exports.
 
 ## [1.0.0]
 ### Added

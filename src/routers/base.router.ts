@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import { debug } from '../debug';
 
-export interface IServerResponse<T> {
+export interface IServerResponse<T = undefined> {
     state: string;
     message: string;
     data?: T;
