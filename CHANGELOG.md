@@ -4,7 +4,8 @@ All notable changes to the micro-web-service project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+<!--## [Unreleased]-->
+## [2.0.0] - 2020-11-26
 ### BREAKING CHANGES
 - Renamed `sendSuccessResponse` to `sendSuccess`.
 - Renamed `send404` to `sendNotFound`.
@@ -15,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `IServerResponse` to exports.
 - Utility functions for gracefully shutting down a server 
 
-## [1.0.0]
+## [1.0.0] - 2020-06-19
 ### Added
 - Initial code.
 - Setup for this project.
