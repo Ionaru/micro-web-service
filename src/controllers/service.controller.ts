@@ -1,12 +1,12 @@
 import { WebServer } from '@ionaru/web-server';
 import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
+import { Debugger } from 'debug';
 import * as express from 'express';
 // eslint-disable-next-line import/no-unresolved
 import { ErrorRequestHandler, PathParams, RequestHandler } from 'express-serve-static-core';
 
 import { BaseRouter, RequestLogger } from '..';
-import { debug } from '../debug';
 
 export interface IRoute {
     0: PathParams;
@@ -19,6 +19,7 @@ export interface IOption {
 }
 
 interface IConstructorParams {
+    debug?: Debugger;
     errorRouter?: ErrorRequestHandler;
     middleware?: RequestHandler[];
     options?: IOption[];
@@ -32,47 +33,85 @@ export class ServiceController {
     public readonly webServer: WebServer;
     public readonly expressApplication: express.Application;
 
+    private readonly debug?: Debugger;
+
     public constructor(
         {
+            debug,
             errorRouter,
-            middleware = [
-                RequestLogger.logRequest(),
-                bodyParser.json(),
-                bodyParser.urlencoded({extended: true}),
-                compression(),
-            ],
+            middleware,
             options = [],
             port,
             routes,
             staticPaths = [],
         }: IConstructorParams,
     ) {
+        this.debug = debug ? debug.extend(this.constructor.name) : debug;
 
-        debug('Beginning Express startup');
+        if (!middleware) {
+            middleware = [
+                new RequestLogger(this.debug).getLogger(),
+                ...ServiceController.getStandardMiddleware(),
+            ];
+        }
+
+        this.log('Beginning Express startup');
         this.expressApplication = express();
-        debug('Express application constructed');
+        this.log('Express application constructed');
 
-        debug('Setting options');
-        options.forEach((option) => this.expressApplication.set(option[0], option[1]));
+        if (options?.length) {
+            this.log('Setting options:');
+            options.forEach((option) => {
+                this.log(`- ${option[0]}`);
+                this.expressApplication.set(option[0], option[1]);
+            });
+        }
 
-        debug('Adding middleware');
-        middleware.forEach((handler) => this.expressApplication.use(handler));
+        this.log('Adding middleware:');
+        middleware.forEach((handler) => {
+            this.log(`- ${handler.name}`);
+            this.expressApplication.use(handler);
+        });
 
-        debug('Adding static paths');
-        staticPaths.forEach((path) => this.expressApplication.use(express.static(path)));
+        if (staticPaths?.length) {
+            this.log('Adding static paths:');
+            staticPaths.forEach((path) => {
+                this.log(`- ${path}`);
+                this.expressApplication.use(express.static(path));
+            });
+        }
 
-        debug('Adding routes');
-        routes.forEach((route) => this.expressApplication.use(route[0], route[1].router));
+        if (routes.length) {
+            this.log('Adding routes:');
+            routes.forEach((route) => {
+                this.log(`- ${route[0]} -> ${route[1].constructor.name}`);
+                this.expressApplication.use(route[0], route[1].router);
+            });
+        }
 
         if (errorRouter) {
-            debug('Error router added');
+            this.log('Error router added');
             this.expressApplication.use(errorRouter);
         }
 
-        debug('Express configuration set');
-        debug('App startup done');
+        this.log('Express configuration set');
+        this.log('App startup done');
 
-        this.webServer = new WebServer(this.expressApplication, port);
+        this.webServer = new WebServer(this.expressApplication, port, this.debug);
+    }
+
+    /**
+     * Contains:
+     * - `bodyParser.json()`
+     * - `bodyParser.urlencoded({extended: true})`
+     * - `compression()`
+     */
+    public static getStandardMiddleware(): RequestHandler[] {
+        return [
+            bodyParser.json(),
+            bodyParser.urlencoded({extended: true}),
+            compression(),
+        ];
     }
 
     public async listen(): Promise<void> {
@@ -81,5 +120,11 @@ export class ServiceController {
 
     public async close(): Promise<void> {
         return this.webServer.close();
+    }
+
+    private log(message: string): void {
+        if (this.debug) {
+            this.debug(message);
+        }
     }
 }

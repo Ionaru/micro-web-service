@@ -1,12 +1,12 @@
 # @ionaru/micro-web-service
 
 ## Description
-A package for an easy express setup.
+A library with tools to quickly create an express server.
 
 ## Usage
 ```
-npm install @ionaru/micro-web-service chalk debug http-status-codes supports-color
-npm install -D @types/body-parser @types/compression @types/debug @types/express @types/express-serve-static-core
+npm install @ionaru/micro-web-service
+npm install -D @types/body-parser @types/compression @types/express @types/express-serve-static-core
 ```
 
 ```js
@@ -21,11 +21,11 @@ export class ExampleRouter extends BaseRouter {
     }
     
     static okHandler(request, response, next) {
-        ExampleRouter.sendSuccessResponse(response);
+        ExampleRouter.sendSuccess(response);
     }
     
     static dataHandler(request, response, next) {
-        ExampleRouter.sendSuccessResponse(response, {value: 5});
+        ExampleRouter.sendSuccess(response, {value: 5});
         // Data can be anything.
         // Responds {data: {value: 5}, message: 'OK', state: 'success'}
     }
@@ -40,10 +40,13 @@ export class ExampleRouter extends BaseRouter {
 }
 
 const router = new ExampleRouter();
-new ServiceController({
+const serviceController = new ServiceController({
     port: 3000,
     routes: [
         ['/', router],
     ],
 }).listen().then();
+
+// Close the webserver
+serviceController.close().then();
 ```

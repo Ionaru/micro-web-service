@@ -1,7 +1,7 @@
 {
     "name": "@ionaru/micro-web-service",
     "version": "2.0.0",
-    "description": "My package micro-web-service",
+    "description": "A library with tools to quickly create an express server",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
@@ -21,40 +21,36 @@
     "repository": "github:Ionaru/micro-web-service",
     "license": "MIT",
     "devDependencies": {
-        "@ionaru/eslint-config": "^2.0.1",
+        "@ionaru/eslint-config": "^3.0.0",
         "@types/body-parser": "^1.19.0",
         "@types/compression": "^1.7.0",
         "@types/debug": "^4.1.5",
-        "@types/express": "^4.17.9",
-        "@types/express-serve-static-core": "^4.17.14",
-        "@types/node": "^14.14.10",
+        "@types/express": "^4.17.11",
+        "@types/express-serve-static-core": "^4.17.19",
+        "@types/node": "^14.14.37",
         "@types/on-finished": "^2.3.1",
-        "@typescript-eslint/eslint-plugin": "^4.8.2",
-        "@typescript-eslint/eslint-plugin-tslint": "^4.8.2",
-        "chalk": "^4.1.0",
-        "debug": "^4.3.1",
-        "eslint": "^7.14.0",
+        "@typescript-eslint/eslint-plugin": "^4.20.0",
+        "@typescript-eslint/eslint-plugin-tslint": "^4.20.0",
+        "eslint": "^7.23.0",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-no-null": "^1.0.2",
-        "eslint-plugin-prefer-arrow": "^1.2.2",
-        "eslint-plugin-sonarjs": "^0.5.0",
-        "http-status-codes": "^2.1.4",
-        "supports-color": "^8.0.0",
-        "ts-node": "^9.0.0",
+        "eslint-plugin-prefer-arrow": "^1.2.3",
+        "eslint-plugin-sonarjs": "^0.6.0",
+        "ts-node": "^9.1.1",
         "tslint": "^6.1.3",
-        "typescript": "^4.1.2"
+        "typescript": "^4.2.3"
     },
     "dependencies": {
-        "@ionaru/web-server": "^4.0.0",
+        "@ionaru/web-server": "^4.2.0",
         "body-parser": "^1.19.0",
+        "chalk": "^4.1.0",
         "compression": "^1.7.4",
         "express": "^4.17.1",
+        "http-status-codes": "^2.1.4",
         "on-finished": "^2.3.0"
     },
-    "peerDependencies": {
-        "chalk": "^4.1.0",
+    "optionalDependencies": {
         "debug": "^4.3.1",
-        "http-status-codes": "^2.1.4",
-        "supports-color": "^8.0.0"
+        "supports-color": "^8.1.1"
     }
 }

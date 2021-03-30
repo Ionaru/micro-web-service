@@ -1,9 +1,8 @@
-import { NextFunction, Request, RequestHandler, Response, Router } from 'express';
+import { Debugger } from 'debug';
+import { NextFunction, Request, Response, Router } from 'express';
 // eslint-disable-next-line import/no-unresolved
-import { PathParams, RequestHandlerParams } from 'express-serve-static-core';
+import { PathParams, RequestHandlerParams, RequestHandler } from 'express-serve-static-core';
 import { StatusCodes } from 'http-status-codes';
-
-import { debug } from '../debug';
 
 export interface IServerResponse<T = undefined> {
     state: string;
@@ -20,12 +19,13 @@ type Method = 'post' | 'put' | 'get' | 'delete' | 'all';
 
 export abstract class BaseRouter {
 
-    protected static debug = debug.extend('router');
-
     public router = Router();
 
-    protected constructor() {
-        BaseRouter.debug(`New express router: ${this.constructor.name}`);
+    private readonly debug?: Debugger;
+
+    protected constructor(debug?: Debugger) {
+        this.debug = debug ? debug.extend('BaseRouter') : debug;
+        this.log(`New express router: ${this.constructor.name}`);
     }
 
     public static sendResponse<T>(response: Response, statusCode: number, message: string, data?: T): Response {
@@ -107,7 +107,8 @@ export abstract class BaseRouter {
     }
 
     public createRoute(method: Method, url: PathParams, ...handlers: Array<RequestHandler | RequestHandlerParams>): void {
-        BaseRouter.debug(`New route: ${method.toUpperCase()} ${url}`);
+        const handlerMapper = (handler: RequestHandler | RequestHandlerParams) => 'name' in handler ? handler.name : 'handler';
+        this.log(`New route: ${method.toUpperCase().padEnd(6)} ${url} -> ${handlers.map(handlerMapper)}`);
         this.router[method](url, ...handlers.map((handler) => this.asyncHandler(handler)));
     }
 
@@ -119,5 +120,11 @@ export abstract class BaseRouter {
             response.route.push(`${this.constructor.name}`);
             Promise.resolve(routeFunction(request, response, next)).catch(next);
         };
+    }
+
+    private log(message: string) {
+        if (this.debug) {
+            this.debug(message);
+        }
     }
 }

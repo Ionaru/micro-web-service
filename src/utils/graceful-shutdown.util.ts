@@ -1,6 +1,6 @@
 import { format } from 'util';
 
-import * as debug from 'debug';
+import { Debugger } from 'debug';
 
 export const handleExceptions = (
     gracefulShutdown: () => Promise<void>, shutdown: (code?: number) => void,
@@ -18,7 +18,7 @@ export const handleExceptions = (
 };
 
 export const handleSignals = (
-    gracefulShutdown: () => Promise<void>, shutdown: (code?: number) => void, debugLogger?: debug.Debugger,
+    gracefulShutdown: () => Promise<void>, shutdown: (code?: number) => void, debugLogger?: Debugger,
 ): void => {
     process.stdin.resume();
     process.on('SIGINT', () => {
