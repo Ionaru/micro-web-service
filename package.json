@@ -1,6 +1,6 @@
 {
     "name": "@ionaru/micro-web-service",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "description": "A library with tools to quickly create an express server",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
