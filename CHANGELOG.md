@@ -4,7 +4,10 @@ All notable changes to the micro-web-service project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-[comment]: <> (## [Unreleased])
+## [Unreleased]
+### Changed
+- Build target is now es2017 (compatible with Node.js 10 and up).
+
 ## [3.0.0] - 2021-03-31
 ### BREAKING CHANGES
 - RequestLogger changes:
