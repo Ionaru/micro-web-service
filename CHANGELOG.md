@@ -4,7 +4,8 @@ All notable changes to the micro-web-service project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+[comment]: <> (## [Unreleased])
+## [3.0.1] - 2021-04-01
 ### Changed
 - Build target is now es2017 (compatible with Node.js 10 and up).
 
@@ -41,7 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial code.
 - Setup for this project.
 
-[Unreleased]: https://github.com/Ionaru/micro-web-service/compare/3.0.0...HEAD
+[Unreleased]: https://github.com/Ionaru/micro-web-service/compare/3.0.1...HEAD
+[3.0.1]: https://github.com/Ionaru/micro-web-service/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/Ionaru/micro-web-service/compare/2.0.0...3.0.0
 [2.0.0]: https://github.com/Ionaru/micro-web-service/compare/1.0.0...2.0.0
 [1.0.0]: https://github.com/Ionaru/micro-web-service/compare/3b5e936...1.0.0
