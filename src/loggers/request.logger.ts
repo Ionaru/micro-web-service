@@ -44,7 +44,7 @@ export class RequestLogger {
     }
 
     public getLogger(): RequestHandler {
-        return this.logRequest;
+        return this.logRequest.bind(this);
     }
 
     private logRequest(request: Request, response: Response, next: NextFunction) {
