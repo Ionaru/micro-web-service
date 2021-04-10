@@ -4,7 +4,10 @@ All notable changes to the micro-web-service project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-[comment]: <> (## [Unreleased])
+## [Unreleased]
+### Added
+- 'patch' to allowed HTTP methods.
+
 ## [4.0.0] - 2021-04-11
 ### BREAKING CHANGES
 - The exported `Request` type is now a custom type using `Params`, `Unsure` from this package and `Query` from express.

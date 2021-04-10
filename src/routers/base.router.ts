@@ -15,7 +15,7 @@ export interface IResponse extends Response {
     data?: IServerResponse<any>;
 }
 
-type Method = 'post' | 'put' | 'get' | 'delete' | 'all';
+type Method = 'post' | 'put' | 'patch' | 'get' | 'delete' | 'all';
 
 export abstract class BaseRouter {
 
