@@ -1,6 +1,9 @@
-import { format } from 'util';
+import { format, inspect } from 'util';
 
 import { Debugger } from 'debug';
+
+// eslint-disable-next-line no-null/no-null
+const getDetails = (input: any): string => format(inspect(input, {depth: null}));
 
 export const handleExceptions = (
     gracefulShutdown: () => Promise<void>, shutdown: (code?: number) => void,
@@ -8,11 +11,11 @@ export const handleExceptions = (
 
     process.stdin.resume();
     process.on('unhandledRejection', (reason, p) => {
-        process.stderr.write(`Unhandled Rejection at: \nPromise ${format(p)} \nReason: ${format(reason)}\n`);
+        process.stderr.write(`Unhandled Rejection at: \nPromise ${format(p)} \nReason: ${getDetails(reason)}\n`);
         gracefulShutdown().then(() => shutdown()).catch(() => shutdown(1));
     });
     process.on('uncaughtException', (error) => {
-        process.stderr.write(`Uncaught Exception! \n${format(error)}\n`);
+        process.stderr.write(`Uncaught Exception! \n${getDetails(error)}\n`);
         gracefulShutdown().then(() => shutdown()).catch(() => shutdown(1));
     });
 };
