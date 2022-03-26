@@ -1,7 +1,8 @@
 import Ajv, { ErrorObject, JSONSchemaType, ValidateFunction } from 'ajv';
-import addFormats from 'ajv-formats';
+import ajvErrors from 'ajv-errors';
+import ajvFormats from 'ajv-formats';
 import { Debugger } from 'debug';
-import { Response } from 'express';
+import { Request, RequestHandler, Response } from 'express-serve-static-core';
 
 import { BaseRouter } from '../routers/base.router';
 
@@ -11,27 +12,42 @@ export abstract class AjvValidationRoute extends BaseRouter {
 
     protected constructor(debug?: Debugger, add = true) {
         super(debug);
-        this.ajv = new Ajv();
+        this.ajv = new Ajv({allErrors: true});
         if (add) {
-            addFormats(this.ajv);
+            ajvErrors(this.ajv);
+            ajvFormats(this.ajv);
         }
     }
 
-    protected static getErrorDetails(errors?: ErrorObject[] | null): [string, string] {
+    protected static getErrorDetails(errors?: ErrorObject[] | null): Array<[string, string]> {
         if (!errors || !errors.length) {
-            return ['Unknown', 'Unknown'];
+            return [['Unknown', 'Unknown']];
         }
 
-        const error = errors[0];
-        const property = error.instancePath;
-        const message = error.message;
+        const errorDetails: Array<[string, string]> = [];
 
-        return [property, message || 'Invalid'];
+        for (const error of errors) {
+            const property = error.instancePath;
+            const message = error.message;
+            errorDetails.push([property, message || 'Invalid']);
+        }
+
+        return errorDetails;
     }
 
     protected static sendValidationError(response: Response, validator: ValidateFunction): Response {
-        const [property, message] = AjvValidationRoute.getErrorDetails(validator.errors);
+        const [property, message] = AjvValidationRoute.getErrorDetails(validator.errors)[0];
         return AjvValidationRoute.sendBadRequest(response, property, message);
+    }
+
+    protected static renderValidationError(request: Request, response: Response, validator: ValidateFunction, handler: RequestHandler): void {
+        const errors = AjvValidationRoute.getErrorDetails(validator.errors);
+
+        for (const [property, message] of errors) {
+            response.locals.errors.push(`${property}: ${message}`);
+        }
+
+        return handler(request, response, () => undefined);
     }
 
     protected static validate<T>(input: unknown, validator: ValidateFunction<T>, response: Response, sendError = true): input is T {
