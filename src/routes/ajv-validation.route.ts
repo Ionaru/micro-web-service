@@ -46,6 +46,10 @@ export abstract class AjvValidationRoute extends BaseRouter {
     ): void {
         const errors = AjvValidationRoute.getErrorDetails(validator.errors);
 
+        if (!response.locals.errors) {
+            response.locals.errors = [];
+        }
+
         for (const [property, message] of errors) {
             response.locals.errors.push(`${property}: ${message}`);
         }
