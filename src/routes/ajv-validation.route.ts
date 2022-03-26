@@ -2,6 +2,7 @@ import Ajv, { ErrorObject, JSONSchemaType, ValidateFunction } from 'ajv';
 import ajvErrors from 'ajv-errors';
 import ajvFormats from 'ajv-formats';
 import { Debugger } from 'debug';
+// eslint-disable-next-line import/no-unresolved
 import { Request, RequestHandler, Response } from 'express-serve-static-core';
 
 import { BaseRouter } from '../routers/base.router';
@@ -12,7 +13,7 @@ export abstract class AjvValidationRoute extends BaseRouter {
 
     protected constructor(debug?: Debugger, add = true) {
         super(debug);
-        this.ajv = new Ajv({allErrors: true});
+        this.ajv = new Ajv({ allErrors: true });
         if (add) {
             ajvErrors(this.ajv);
             ajvFormats(this.ajv);
@@ -40,7 +41,9 @@ export abstract class AjvValidationRoute extends BaseRouter {
         return AjvValidationRoute.sendBadRequest(response, property, message);
     }
 
-    protected static renderValidationError(request: Request, response: Response, validator: ValidateFunction, handler: RequestHandler): void {
+    protected static renderValidationError(
+        request: Request, response: Response, validator: ValidateFunction, handler: RequestHandler
+    ): void {
         const errors = AjvValidationRoute.getErrorDetails(validator.errors);
 
         for (const [property, message] of errors) {
