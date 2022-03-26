@@ -51,7 +51,7 @@ export class RequestLogger {
         const requestStartTime = Date.now();
 
         // Runs when the request has finished.
-        onFinished(response, async (_err, endResponse: IResponse) => {
+        onFinished(response, async (_err: any, endResponse: IResponse) => {
 
             const ignoredUrlMatch = RequestLogger.ignoredUrls.some(
                 (ignoredUrl) => request.originalUrl.startsWith(ignoredUrl));

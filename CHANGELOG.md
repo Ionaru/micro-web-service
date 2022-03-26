@@ -57,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for Node.js 14.
 - Helper functions for sending 200, 400, 404 and 405 responses.
 - `IServerResponse` to exports.
-- Utility functions for gracefully shutting down a server 
+- Utility functions for gracefully shutting down a server
 
 ## [1.0.0] - 2020-06-19
 ### Added

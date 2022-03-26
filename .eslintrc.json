@@ -9,5 +9,8 @@
     },
     "extends": [
         "@ionaru"
-    ]
+    ],
+    "rules": {
+        "import/extensions": "off"
+    }
 }
