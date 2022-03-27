@@ -5,7 +5,6 @@ import { Debugger } from 'debug';
 import { RequestHandler, Response } from 'express';
 
 import { BaseRouter } from '../routers/base.router';
-import { Request } from '../utils/types.util';
 
 export abstract class AjvValidationRoute extends BaseRouter {
 
@@ -41,9 +40,7 @@ export abstract class AjvValidationRoute extends BaseRouter {
         return AjvValidationRoute.sendBadRequest(response, property, message);
     }
 
-    protected static renderValidationError(
-        request: Request, response: Response, validator: ValidateFunction, handler: RequestHandler
-    ): void {
+    protected static renderValidationError(response: Response, validator: ValidateFunction, handler: RequestHandler): void {
         const errors = AjvValidationRoute.getErrorDetails(validator.errors);
 
         if (!response.locals.errors) {
@@ -54,7 +51,7 @@ export abstract class AjvValidationRoute extends BaseRouter {
             response.locals.errors.push(`${property}: ${message}`);
         }
 
-        return handler(request, response, () => undefined);
+        return handler(response.req, response, () => undefined);
     }
 
     protected static validate<T>(input: unknown, validator: ValidateFunction<T>, response: Response, sendError = true): input is T {
