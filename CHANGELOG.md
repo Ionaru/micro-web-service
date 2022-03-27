@@ -4,7 +4,15 @@ All notable changes to the micro-web-service project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-[comment]: <> (## [Unreleased])
+## [Unreleased]
+### BREAKING CHANGES
+- `AjvValidationRoute.getErrorDetails` now returns a list of errors instead of just one.
+- The `allErrors` option has been set to `true` on the `Ajv` instance.
+
+### Added
+- Support for custom validation error messages.
+- Shortcut for rendering a validation error (set error on locals and redirect).
+
 ## [4.2.0] - 2021-04-11
 ### Added
 - Improved error logging in `handleExceptions`.

@@ -3,6 +3,7 @@ import ajvErrors from 'ajv-errors';
 import ajvFormats from 'ajv-formats';
 import { Debugger } from 'debug';
 import { RequestHandler, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 import { BaseRouter } from '../routers/base.router';
 
@@ -19,6 +20,9 @@ export abstract class AjvValidationRoute extends BaseRouter {
         }
     }
 
+    /**
+     * Parses an Ajv ErrorObject and returns a list of property names and messages.
+     */
     protected static getErrorDetails(errors?: ErrorObject[] | null): Array<[string, string]> {
         if (!errors || !errors.length) {
             return [['Unknown', 'Unknown']];
@@ -35,11 +39,18 @@ export abstract class AjvValidationRoute extends BaseRouter {
         return errorDetails;
     }
 
+    /**
+     * Parses a failed Ajv validation and sends a validation error (JSON) to the client.
+     */
     protected static sendValidationError(response: Response, validator: ValidateFunction): Response {
         const [property, message] = AjvValidationRoute.getErrorDetails(validator.errors)[0];
         return AjvValidationRoute.sendBadRequest(response, property, message);
     }
 
+    /**
+     * Parses a failed Ajv validation, adds the errors to the response, and redirects the response to a given handler.
+     * This is useful for rendering errors with a templating engine.
+     */
     protected static renderValidationError(response: Response, validator: ValidateFunction, handler: RequestHandler): void {
         const errors = AjvValidationRoute.getErrorDetails(validator.errors);
 
@@ -51,6 +62,7 @@ export abstract class AjvValidationRoute extends BaseRouter {
             response.locals.errors.push(`${property}: ${message}`);
         }
 
+        response.status(StatusCodes.BAD_REQUEST);
         return handler(response.req, response, () => undefined);
     }
 
