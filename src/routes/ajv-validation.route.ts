@@ -2,10 +2,10 @@ import Ajv, { ErrorObject, JSONSchemaType, ValidateFunction } from 'ajv';
 import ajvErrors from 'ajv-errors';
 import ajvFormats from 'ajv-formats';
 import { Debugger } from 'debug';
-// eslint-disable-next-line import/no-unresolved
-import { Request, RequestHandler, Response } from 'express-serve-static-core';
+import { RequestHandler, Response } from 'express';
 
 import { BaseRouter } from '../routers/base.router';
+import { Request } from '../utils/types.util';
 
 export abstract class AjvValidationRoute extends BaseRouter {
 
