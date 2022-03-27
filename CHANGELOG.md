@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### BREAKING CHANGES
 - `AjvValidationRoute.getErrorDetails` now returns a list of errors instead of just one.
 - The `allErrors` option has been set to `true` on the `Ajv` instance.
+- Moved `Ajv` to peerDependencies because most consumers need to import parts of it as well.
 
 ### Added
 - Support for custom validation error messages.
